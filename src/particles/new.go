@@ -36,9 +36,9 @@ func NewSystem() System {
 		particules = append(particules, p)
 	}
 
-	var f func(*[]Particle)
+	var f func(*[]Particle, *float64)
 	if config.General.SpawnRate >= 1 {
-		f = func(content *[]Particle) {
+		f = func(content *[]Particle, c *float64) {
 			for i := 0; i < int(config.General.SpawnRate); i++ {
 				var x, y = getPosition()
 				*content = append(*content, genParticule(x, y))
@@ -46,13 +46,16 @@ func NewSystem() System {
 		}
 	} else {
 		if config.General.SpawnRate > 0 {
-			f = func(content *[]Particle) {
-				
+			f = func(content *[]Particle, c *float64) {
+				*c += config.General.SpawnRate
+				if *c > 1 {
+					*c = 0
+					var x, y = getPosition()
+					*content = append(*content, genParticule(x, y))
+				}
 			}
 		}else {
-			f = func(content *[]Particle) {
-
-			}
+			f = func(content *[]Particle, c *float64) {}
 		}
 	}
 	var s System = System{Content: particules}

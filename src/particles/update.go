@@ -13,5 +13,5 @@ func (s *System) Update() {
 		s.Content[i].PositionY += s.Content[i].VitesseY
 	}
 
-	s.UpdateContent(&(s.Content))
+	s.UpdateContent(&(s.Content), &(s.UpdateCount))
 }
