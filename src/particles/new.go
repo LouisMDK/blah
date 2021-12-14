@@ -36,15 +36,23 @@ func NewSystem() System {
 		particules = append(particules, p)
 	}
 
-	var f func(*[]Particle) 
+	var f func(*[]Particle)
 	if config.General.SpawnRate >= 1 {
 		f = func(content *[]Particle) {
-
 			for i := 0; i < int(config.General.SpawnRate); i++ {
-				var x, y = float64(rand.Intn(config.General.WindowSizeX)), float64(rand.Intn(config.General.WindowSizeY))
+				var x, y = getPosition()
 				*content = append(*content, genParticule(x, y))
 			}
-			
+		}
+	} else {
+		if config.General.SpawnRate > 0 {
+			f = func(content *[]Particle) {
+				
+			}
+		}else {
+			f = func(content *[]Particle) {
+
+			}
 		}
 	}
 	var s System = System{Content: particules}
@@ -61,8 +69,8 @@ func genParticule(x, y float64) Particle {
 	return Particle{
 		PositionX: x, 
 		PositionY: y,
-		VitesseX: float64(rand.Intn(22) - 10),
-		VitesseY: float64(rand.Intn(22) - 10),
+		VitesseX: rand.Float64() * 11 - 5,
+		VitesseY: rand.Float64() * 11 - 5,
 		ScaleX: 1,
 		ScaleY: 1,
 		ColorRed: 1,
