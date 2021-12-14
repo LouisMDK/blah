@@ -31,12 +31,43 @@ func NewSystem() System {
 		
 	for i  := 0; i < config.General.InitNumParticles; i++ {
 		var x, y = getPosition()
-		var p Particle = Particle{PositionX: x, PositionY: y}
+
+		var p Particle = genParticule(x, y)
 		particules = append(particules, p)
 	}
 
-	if config.General.Debug {
-		log.Println("Nouveau système créé avec pour contenu :", particules)
+	var f func(*[]Particle) 
+	if config.General.SpawnRate >= 1 {
+		f = func(content *[]Particle) {
+
+			for i := 0; i < int(config.General.SpawnRate); i++ {
+				var x, y = float64(rand.Intn(config.General.WindowSizeX)), float64(rand.Intn(config.General.WindowSizeY))
+				*content = append(*content, genParticule(x, y))
+			}
+			
+		}
 	}
-	return System{Content: particules}
+	var s System = System{Content: particules}
+	s.UpdateContent = f
+
+	if config.General.Debug {
+		log.Println("Nouveau système créé avec pour contenu :", s.Content)
+	}
+
+	return s
+}
+
+func genParticule(x, y float64) Particle {
+	return Particle{
+		PositionX: x, 
+		PositionY: y,
+		VitesseX: float64(rand.Intn(22) - 10),
+		VitesseY: float64(rand.Intn(22) - 10),
+		ScaleX: 1,
+		ScaleY: 1,
+		ColorRed: 1,
+		ColorGreen: 0,
+		ColorBlue: 0,
+		Opacity: 1,
+	}
 }

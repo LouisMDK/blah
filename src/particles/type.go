@@ -5,6 +5,8 @@ package particles
 // évoluer durant votre projet.
 type System struct {
 	Content []Particle
+	UpdateContent func(*[]Particle) 
+	UpdateCount float64
 }
 
 // Particle définit une particule.
@@ -13,6 +15,7 @@ type System struct {
 // durant le projet.
 type Particle struct {
 	PositionX, PositionY            float64
+	VitesseX, VitesseY              float64
 	Rotation                        float64
 	ScaleX, ScaleY                  float64
 	ColorRed, ColorGreen, ColorBlue float64
