@@ -13,7 +13,6 @@ import (
 // centre de l'écran.
 func NewSystem() System {
 
-
 	var particules []Particle
 	
 	var getPosition func() (float64, float64)
