@@ -41,12 +41,20 @@ func NewSystem() System {
 
 func (s *System) UpdateContent() {
 	if config.General.SpawnRate > 0 {
-		s.UpdateCount += config.General.SpawnRate
-		if s.UpdateCount > 1 {
-			s.UpdateCount = 0
-			var x, y = s.getPos()
-			s.Content = append(s.Content, genParticule(x, y))
+		if config.General.SpawnRate > 1 {
+			for i := 0; i < int(config.General.SpawnRate); i++ {
+				var x, y = s.getPos()
+				s.Content = append(s.Content, genParticule(x, y))
+			}
+		} else {
+			s.UpdateCount += config.General.SpawnRate
+			if s.UpdateCount >= 1 {
+				s.UpdateCount = 0
+				var x, y = s.getPos()
+				s.Content = append(s.Content, genParticule(x, y))
+			}
 		}
+		
 	}
 }
 

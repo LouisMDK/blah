@@ -13,5 +13,6 @@ func (s *System) Update() {
 		s.Content[i].PositionY += s.Content[i].VitesseY
 	}
 
+	// Met à jour le contenu du système suivanr les valeurs du fichier config
 	s.UpdateContent()
 }
