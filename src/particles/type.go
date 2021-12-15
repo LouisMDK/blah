@@ -5,7 +5,7 @@ package particles
 // évoluer durant votre projet.
 type System struct {
 	Content []Particle
-	UpdateContent func(*[]Particle, *float64) 
+	getPos func() (float64, float64)
 	UpdateCount float64
 }
 

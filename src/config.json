@@ -8,5 +8,5 @@
 	"RandomSpawn": false,
 	"SpawnX": 400,
 	"SpawnY": 300,
-	"SpawnRate": 0.01
+	"SpawnRate": 0.5
 }

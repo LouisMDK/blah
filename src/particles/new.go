@@ -14,58 +14,48 @@ import (
 func NewSystem() System {
 
 	var particules []Particle
-	
-	var getPosition func() (float64, float64)
+	var s System = System{}
 
-	// si la variable RandomSpawn dans le fichier config est True, la fonction getPosition() renvoie des valeurs aléatoires
-	// sinon elle renvoie les valeurs issues de SpawnX et SpawnY dans le fichier de config
 	if config.General.RandomSpawn {
-		getPosition = func() (float64, float64) {
-			return float64(rand.Intn(config.General.WindowSizeX)), float64(rand.Intn(config.General.WindowSizeY))
-		}
+		s.getPos = getRandomPosition
 	}else {
-		getPosition = func() (float64, float64) {
-			return float64(config.General.SpawnX), float64(config.General.SpawnY)
-		}
+		s.getPos = getFixedPosition
 	}
 		
 	for i  := 0; i < config.General.InitNumParticles; i++ {
-		var x, y = getPosition()
-
+		var x, y = s.getPos()
 		var p Particle = genParticule(x, y)
 		particules = append(particules, p)
 	}
 
-	var f func(*[]Particle, *float64)
-	if config.General.SpawnRate >= 1 {
-		f = func(content *[]Particle, c *float64) {
-			for i := 0; i < int(config.General.SpawnRate); i++ {
-				var x, y = getPosition()
-				*content = append(*content, genParticule(x, y))
-			}
-		}
-	} else {
-		if config.General.SpawnRate > 0 {
-			f = func(content *[]Particle, c *float64) {
-				*c += config.General.SpawnRate
-				if *c > 1 {
-					*c = 0
-					var x, y = getPosition()
-					*content = append(*content, genParticule(x, y))
-				}
-			}
-		}else {
-			f = func(content *[]Particle, c *float64) {}
-		}
-	}
-	var s System = System{Content: particules}
-	s.UpdateContent = f
+	
+	s.UpdateCount = 0
+	s.Content = particules
 
 	if config.General.Debug {
 		log.Println("Nouveau système créé avec pour contenu :", s.Content)
 	}
 
 	return s
+}
+
+func (s *System) UpdateContent() {
+	if config.General.SpawnRate > 0 {
+		s.UpdateCount += config.General.SpawnRate
+		if s.UpdateCount > 1 {
+			s.UpdateCount = 0
+			var x, y = s.getPos()
+			s.Content = append(s.Content, genParticule(x, y))
+		}
+	}
+}
+
+func getRandomPosition() (float64, float64) {
+	return float64(rand.Intn(config.General.WindowSizeX)), float64(rand.Intn(config.General.WindowSizeY))
+}
+
+func getFixedPosition() (float64, float64) {
+	return float64(config.General.SpawnX), float64(config.General.SpawnY)
 }
 
 func genParticule(x, y float64) Particle {
